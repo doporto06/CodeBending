@@ -1279,26 +1279,40 @@ def detallesEjerciciosEstudiantes(estudiante_id, serie_id, ejercicio_id):
                                             current_app.logger.info(f'Archivo guardado en: {rutaFinal}')
                                     resultadoTest= ejecutarTestUnitario(rutaEjercicioEstudiante)
                                     current_app.logger.info(f'Resultado test: {resultadoTest}')
-                                    if resultadoTest == 'BUILD SUCCESS':
-                                        current_app.logger.info(f'El test fue exitoso')
-                                        nuevoEjercicioAsignado.contador += 1
-                                        nuevoEjercicioAsignado.ultimo_envio = rutaFinal
-                                        nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                        nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
-                                        nuevoEjercicioAsignado.estado = True
-                                        db.session.commit()
-                                        errores = {"tipo": "success", "titulo": "Todos los test aprobados", "mensaje": resultadoTest}
-                                        return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, errores=errores ,estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
-                                    else:
-                                        current_app.logger.info(f'El test no fue exitoso')
-                                        nuevoEjercicioAsignado.contador += 1
-                                        nuevoEjercicioAsignado.ultimo_envio = rutaFinal
-                                        nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                        nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
-                                        nuevoEjercicioAsignado.estado = False
-                                        db.session.commit()
-                                        errores= {"tipo": "danger", "titulo": "Errores en la ejecución de pruebas unitarias", "mensaje": resultadoTest}
-                                        return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, errores=errores ,estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
+
+                                    ###############################################################################################
+                                    ####################################### REFACTORIZACION #######################################
+                                    test_success = (resultadoTest == 'BUILD SUCCESS')
+                                    current_app.logger.info('El test fue exitoso' if test_success else 'El test no fue exitoso')
+
+                                    nuevoEjercicioAsignado.contador += 1
+                                    nuevoEjercicioAsignado.ultimo_envio = rutaFinal
+                                    nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
+                                    nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
+                                    nuevoEjercicioAsignado.estado = test_success
+                                    db.session.commit()
+
+                                    errores = {
+                                        "tipo": "success" if test_success else "danger",
+                                        "titulo": "Todos los test aprobados" if test_success else "Errores en la ejecución de pruebas unitarias",
+                                        "mensaje": resultadoTest
+                                    }
+
+                                    return render_template(
+                                        'detallesEjerciciosEstudiante.html',
+                                        serie=serie,
+                                        ejercicio=ejercicio,
+                                        errores=errores,
+                                        estudiante_id=estudiante_id,
+                                        enunciado=enunciado_html,
+                                        ejercicios=ejercicios,
+                                        ejercicios_asignados=ejercicios_asignados,
+                                        colors_info=colors_info,
+                                        calificacion=calificacion
+                                    )
+                                    ####################################### REFACTORIZACION #######################################
+                                    ###############################################################################################
+                                    
                             except Exception as e:
                                 current_app.logger.error(f'Ocurrió un error al agregar la carpeta del ejercicio: {str(e)}')
                                 db.session.rollback()
@@ -1325,25 +1339,42 @@ def detallesEjerciciosEstudiantes(estudiante_id, serie_id, ejercicio_id):
                                     if archivo_java and archivo_java.filename.endswith('.java'):
                                         archivo_java.save(os.path.join(rutaFinal, archivo_java.filename))
                                 resultadoTest= ejecutarTestUnitario(rutaEjercicioEstudiante)
-                                if resultadoTest == 'BUILD SUCCESS':
-                                    ejercicioAsignado.contador += 1
-                                    ejercicioAsignado.ultimo_envio = rutaFinal
-                                    ejercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                    ejercicioAsignado.test_output = json.dumps(resultadoTest)
-                                    ejercicioAsignado.estado = True
-                                    db.session.commit()
-                                    errores = {"tipo": "success", "titulo": "Todos los test aprobados", "mensaje": resultadoTest}
-                                    return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, errores=errores ,estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
-                                else:
-                                    ejercicioAsignado.contador += 1
-                                    ejercicioAsignado.ultimo_envio = rutaFinal
-                                    ejercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                    ejercicioAsignado.test_output = json.dumps(resultadoTest)
-                                    ejercicioAsignado.estado = False
-                                    db.session.commit()
-                                    errores= {"tipo": "danger", "titulo": "Errores en la ejecución de pruebas unitarias", "mensaje": resultadoTest}
-                                    current_app.logger.info(f'resultadoTest: {resultadoTest}')
-                                    return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, errores=errores ,estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
+
+
+                                ###############################################################################################
+                                ####################################### REFACTORIZACION #######################################
+                                test_success = (resultadoTest == 'BUILD SUCCESS')
+                                current_app.logger.info('El test fue exitoso' if test_success else 'El test no fue exitoso')
+
+                                nuevoEjercicioAsignado.contador += 1
+                                nuevoEjercicioAsignado.ultimo_envio = rutaFinal
+                                nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
+                                nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
+                                nuevoEjercicioAsignado.estado = test_success
+                                db.session.commit()
+
+                                errores = {
+                                    "tipo": "success" if test_success else "danger",
+                                    "titulo": "Todos los test aprobados" if test_success else "Errores en la ejecución de pruebas unitarias",
+                                    "mensaje": resultadoTest
+                                }
+
+                                return render_template(
+                                    'detallesEjerciciosEstudiante.html',
+                                    serie=serie,
+                                    ejercicio=ejercicio,
+                                    errores=errores,
+                                    estudiante_id=estudiante_id,
+                                    enunciado=enunciado_html,
+                                    ejercicios=ejercicios,
+                                    ejercicios_asignados=ejercicios_asignados,
+                                    colors_info=colors_info,
+                                    calificacion=calificacion
+                                )
+                                ####################################### REFACTORIZACION #######################################
+                                ###############################################################################################
+
+                                
                         except Exception as e:
                             db.session.rollback()
                             current_app.logger.error(f'Ocurrió un error al agregar la carpeta del ejercicio: {str(e)}')
