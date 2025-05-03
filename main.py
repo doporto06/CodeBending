@@ -1240,6 +1240,70 @@ def detallesEjerciciosEstudiantes(estudiante_id, serie_id, ejercicio_id):
     else:
         enunciado_html = "<p>El enunciado no está disponible.</p>"
 
+    ################################################# REFACTORIZACIÓN ##################################################
+    #################### Esta función reemplaza los returns del código del ejercicio del estudiante ####################
+    def render_template_ejercicio(errores=None):
+        return render_template(
+            'detallesEjerciciosEstudiante.html',
+            serie=serie,
+            ejercicio=ejercicio,
+            errores=errores,
+            estudiante_id=estudiante_id,
+            enunciado=enunciado_html,
+            ejercicios=ejercicios,
+            ejercicios_asignados=ejercicios_asignados,
+            colors_info=colors_info,
+            calificacion=calificacion
+        )
+    ######################################################### REFACTORIZACIÓN ##########################################################
+    #################### Esta función reemplaza al código que estaba dentro del bloque if-else de ejercicioAsignado ####################
+    def procesar_ejercicio(ejercicio_obj):
+        try:
+            # Crear estructura de carpetas
+            rutaSerieEstudiante = agregarCarpetaSerieEstudiante(rutaArchivador, serie.id)
+            current_app.logger.info(f'Ruta serie estudiante: {rutaSerieEstudiante}')
+            
+            if not os.path.exists(rutaSerieEstudiante):
+                raise Exception("No se pudo crear la carpeta de serie del estudiante")
+                
+            rutaEjercicioEstudiante = agregarCarpetaEjercicioEstudiante(rutaSerieEstudiante, ejercicio.id, ejercicio.path_ejercicio)
+            current_app.logger.info(f'Ruta ejercicio estudiante: {rutaEjercicioEstudiante}')
+            
+            if not os.path.exists(rutaEjercicioEstudiante):
+                raise Exception("No se pudo crear la carpeta de ejercicio del estudiante")
+
+            # Guardar archivos Java
+            rutaFinal = os.path.join(rutaEjercicioEstudiante, 'src/main/java/org/example') # Movido fuera del for loop
+            for archivo_java in archivos_java:
+                if archivo_java and archivo_java.filename.endswith('.java'):
+                    archivo_java.save(os.path.join(rutaFinal, archivo_java.filename))
+                    current_app.logger.info(f'Archivo guardado en: {rutaFinal}')
+
+            # Ejecutar tests
+            resultadoTest = ejecutarTestUnitario(rutaEjercicioEstudiante)
+            current_app.logger.info(f'Resultado test: {resultadoTest}')
+
+            test_success = (resultadoTest == 'BUILD SUCCESS')
+            current_app.logger.info('El test fue exitoso' if test_success else 'El test no fue exitoso')
+            ejercicio_obj.contador += 1
+            ejercicio_obj.ultimo_envio = rutaFinal
+            ejercicio_obj.fecha_ultimo_envio = datetime.now()
+            ejercicio_obj.test_output = json.dumps(resultadoTest)
+            ejercicio_obj.estado = test_success
+            db.session.commit()
+            
+            errores = {
+                "tipo": "success" if test_success else "danger",
+                "titulo": "Todos los test aprobados" if test_success else "Errores en la ejecución de pruebas unitarias",
+                "mensaje": resultadoTest
+            }
+
+            return render_template_ejercicio(errores)
+        except Exception as e:
+            current_app.logger.error(f'Ocurrió un error: {str(e)}')
+            db.session.rollback()
+            return render_template_ejercicio()
+        
     if request.method == 'POST':
         archivos_java = request.files.getlist('archivo_java')
         rutaArchivador=None
@@ -1248,11 +1312,11 @@ def detallesEjerciciosEstudiantes(estudiante_id, serie_id, ejercicio_id):
             flash('Se creo exitosamente el archivador', 'success')
         except Exception as e:
             current_app.logger.error(f'Ocurrió un error al crear el archivador: {str(e)}')
-            return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
+            return render_template_ejercicio() #################### REFACTORIZACIÓN ####################
 
         if os.path.exists(rutaArchivador):
             ejercicioAsignado = Ejercicio_asignado.query.filter_by(id_estudiante=estudiante_id, id_ejercicio=ejercicio.id).first()
-            if not ejercicioAsignado:
+            if not ejercicioAsignado: #################### Dentro de este if-else hice las refactorizaciones ####################
                 try:
                     nuevoEjercicioAsignado = Ejercicio_asignado(
                     id_estudiante=estudiante_id,
@@ -1264,126 +1328,14 @@ def detallesEjerciciosEstudiantes(estudiante_id, serie_id, ejercicio_id):
                     test_output=None)
                     db.session.add(nuevoEjercicioAsignado)
                     db.session.flush()
-                    try:
-                        rutaSerieEstudiante = agregarCarpetaSerieEstudiante(rutaArchivador, serie.id)
-                        current_app.logger.info(f'Ruta serie estudiante: {rutaSerieEstudiante}')
-                        if os.path.exists(rutaSerieEstudiante):
-                            try:
-                                rutaEjercicioEstudiante = agregarCarpetaEjercicioEstudiante(rutaSerieEstudiante, ejercicio.id,  ejercicio.path_ejercicio)
-                                current_app.logger.info(f'Ruta ejercicio estudiante: {rutaEjercicioEstudiante}')
-                                if os.path.exists(rutaEjercicioEstudiante):
-                                    for archivo_java in archivos_java:
-                                        rutaFinal = os.path.join(rutaEjercicioEstudiante, 'src/main/java/org/example')
-                                        if archivo_java and archivo_java.filename.endswith('.java'):
-                                            archivo_java.save(os.path.join(rutaFinal, archivo_java.filename))
-                                            current_app.logger.info(f'Archivo guardado en: {rutaFinal}')
-                                    resultadoTest= ejecutarTestUnitario(rutaEjercicioEstudiante)
-                                    current_app.logger.info(f'Resultado test: {resultadoTest}')
-
-                                    ###############################################################################################
-                                    ####################################### REFACTORIZACION #######################################
-                                    test_success = (resultadoTest == 'BUILD SUCCESS')
-                                    current_app.logger.info('El test fue exitoso' if test_success else 'El test no fue exitoso')
-
-                                    nuevoEjercicioAsignado.contador += 1
-                                    nuevoEjercicioAsignado.ultimo_envio = rutaFinal
-                                    nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                    nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
-                                    nuevoEjercicioAsignado.estado = test_success
-                                    db.session.commit()
-
-                                    errores = {
-                                        "tipo": "success" if test_success else "danger",
-                                        "titulo": "Todos los test aprobados" if test_success else "Errores en la ejecución de pruebas unitarias",
-                                        "mensaje": resultadoTest
-                                    }
-
-                                    return render_template(
-                                        'detallesEjerciciosEstudiante.html',
-                                        serie=serie,
-                                        ejercicio=ejercicio,
-                                        errores=errores,
-                                        estudiante_id=estudiante_id,
-                                        enunciado=enunciado_html,
-                                        ejercicios=ejercicios,
-                                        ejercicios_asignados=ejercicios_asignados,
-                                        colors_info=colors_info,
-                                        calificacion=calificacion
-                                    )
-                                    ####################################### REFACTORIZACION #######################################
-                                    ###############################################################################################
-                                    
-                            except Exception as e:
-                                current_app.logger.error(f'Ocurrió un error al agregar la carpeta del ejercicio: {str(e)}')
-                                db.session.rollback()
-                                return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
-                    except Exception as e:
-                        current_app.logger.error(f'Ocurrió un error al agregar la carpeta de la serie: {str(e)}')
-                        db.session.rollback()
-                        # Agregar la eliminación de la carpeta??
-                        return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
+                    return procesar_ejercicio(nuevoEjercicioAsignado) #################### REFACTORIZACIÓN ####################
                 except Exception as e:
                     current_app.logger.error(f'Ocurrió un error al agregar el ejercicio asignado: {str(e)}')
                     db.session.rollback()
-                    # Agregar la eliminación de la carpeta??
-                    return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
+                    return render_template_ejercicio() #################### REFACTORIZACIÓN ####################
             else:
-                try:
-                    rutaSerieEstudiante = agregarCarpetaSerieEstudiante(rutaArchivador, serie.id)
-                    if os.path.exists(rutaSerieEstudiante):
-                        try:
-                            rutaEjercicioEstudiante = agregarCarpetaEjercicioEstudiante(rutaSerieEstudiante, ejercicio.id,  ejercicio.path_ejercicio)
-                            if os.path.exists(rutaEjercicioEstudiante):
-                                for archivo_java in archivos_java:
-                                    rutaFinal = os.path.join(rutaEjercicioEstudiante, 'src/main/java/org/example')
-                                    if archivo_java and archivo_java.filename.endswith('.java'):
-                                        archivo_java.save(os.path.join(rutaFinal, archivo_java.filename))
-                                resultadoTest= ejecutarTestUnitario(rutaEjercicioEstudiante)
-
-
-                                ###############################################################################################
-                                ####################################### REFACTORIZACION #######################################
-                                test_success = (resultadoTest == 'BUILD SUCCESS')
-                                current_app.logger.info('El test fue exitoso' if test_success else 'El test no fue exitoso')
-
-                                nuevoEjercicioAsignado.contador += 1
-                                nuevoEjercicioAsignado.ultimo_envio = rutaFinal
-                                nuevoEjercicioAsignado.fecha_ultimo_envio = datetime.now()
-                                nuevoEjercicioAsignado.test_output = json.dumps(resultadoTest)
-                                nuevoEjercicioAsignado.estado = test_success
-                                db.session.commit()
-
-                                errores = {
-                                    "tipo": "success" if test_success else "danger",
-                                    "titulo": "Todos los test aprobados" if test_success else "Errores en la ejecución de pruebas unitarias",
-                                    "mensaje": resultadoTest
-                                }
-
-                                return render_template(
-                                    'detallesEjerciciosEstudiante.html',
-                                    serie=serie,
-                                    ejercicio=ejercicio,
-                                    errores=errores,
-                                    estudiante_id=estudiante_id,
-                                    enunciado=enunciado_html,
-                                    ejercicios=ejercicios,
-                                    ejercicios_asignados=ejercicios_asignados,
-                                    colors_info=colors_info,
-                                    calificacion=calificacion
-                                )
-                                ####################################### REFACTORIZACION #######################################
-                                ###############################################################################################
-
-                                
-                        except Exception as e:
-                            db.session.rollback()
-                            current_app.logger.error(f'Ocurrió un error al agregar la carpeta del ejercicio: {str(e)}')
-                            return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, errores=resultadoTest, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados,colors_info=colors_info, calificacion=calificacion)
-                except Exception as e:
-                    current_app.logger.error(f'Ocurrió un error al agregar la carpeta de la serie: {str(e)}')
-                    db.session.rollback()
-
-    return render_template('detallesEjerciciosEstudiante.html', serie=serie, ejercicio=ejercicio, estudiante_id=estudiante_id, enunciado=enunciado_html, ejercicios=ejercicios, ejercicios_asignados=ejercicios_asignados, colors_info=colors_info, calificacion=calificacion)
+                return procesar_ejercicio(ejercicioAsignado) #################### REFACTORIZACIÓN ####################
+    return render_template_ejercicio() #################### REFACTORIZACIÓN ####################
 
 @app.route('/dashEstudiante/<int:estudiante_id>/cuentaEstudiante', methods=['GET', 'POST'])
 @login_required
