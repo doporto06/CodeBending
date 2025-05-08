@@ -1,7 +1,8 @@
-import os, shutil
+import os
+import shutil
+from .exceptions import CarpetaYaExisteError, CarpetaCreacionError
 
 def agregarCarpetaEjercicioEstudiante(rutaSerie, ejercicio_id, ejercicio_path):
-
     # Validar parámetros
     if not os.path.exists(rutaSerie) or not os.path.exists(ejercicio_path):
         raise ValueError("Ruta de archivador o ejercicio no válida.")
@@ -26,7 +27,7 @@ def agregarCarpetaSerieEstudiante(rutaArchivador, serie_id):
             os.makedirs(rutaSerieEstudiante)
             return rutaSerieEstudiante
     except Exception as e:
-        return f"Hubo un error al agregar la carpeta de la serie: {str(e)}"
+        raise CarpetaCreacionError(f"Hubo un error al agregar la carpeta de la serie: {str(e)}")
 
 def crearArchivadorEstudiante(matricula):
     # Función para crear la carpeta del estudiante con la matrícula para guardar sus archivos
@@ -39,41 +40,41 @@ def crearArchivadorEstudiante(matricula):
 
     return rutaEstudiante
 
-
 def crearCarpetaEjercicio(id_ejercicio, id_serie):
     rutaBase = "ejerciciosPropuestos/"
     rutaSerie = os.path.join(rutaBase, f"Serie_{id_serie}")
-    nombreCarpetaEjercicio = os.path.join(rutaSerie, "Ejercicio_" + str(id_ejercicio))
+    nombreCarpetaEjercicio = os.path.join(rutaSerie, f"Ejercicio_{id_ejercicio}")
     rutaEnunciados = os.path.join("enunciadosEjercicios/", f"Serie_{id_serie}")
-    rutaFinalEnunciado = os.path.join(rutaEnunciados, "Ejercicio_" + str(id_ejercicio))
+    rutaFinalEnunciado = os.path.join(rutaEnunciados, f"Ejercicio_{id_ejercicio}")
 
+    # Verificar si las carpetas ya existen
     if os.path.exists(rutaFinalEnunciado) or os.path.exists(nombreCarpetaEjercicio):
-        return rutaFinalEnunciado, nombreCarpetaEjercicio, "Las carpetas ya existen"
+        raise CarpetaYaExisteError("Las carpetas ya existen")
 
     try:
+        # Crear las carpetas necesarias
         shutil.copytree("plantillaMaven/", nombreCarpetaEjercicio)
         os.makedirs(rutaFinalEnunciado)
         return nombreCarpetaEjercicio, rutaFinalEnunciado, "Carpetas creadas con éxito"
     except Exception as e:
-        return None, None, f"Error al crear las carpetas: {str(e)}"
-
+        raise CarpetaCreacionError(f"Error al crear las carpetas: {str(e)}")
 
 def crearCarpetaSerie(id_serie):
-    # Crea una carpeta para una serie específica
     rutaBase = "ejerciciosPropuestos/"
-    rutaEnunciados= "enunciadosEjercicios/"
-    nombreCarpetaEnunciados= f"Serie_{id_serie}"
+    rutaEnunciados = "enunciadosEjercicios/"
+    nombreCarpetaEnunciados = f"Serie_{id_serie}"
 
-    # Crear la carpeta con el formato id_nombreSerie
-    nombre_carpeta = f"Serie_{id_serie}"
-    rutaSerie = os.path.join(rutaBase, nombre_carpeta)
-    rutaFinalEnunciado= os.path.join(rutaEnunciados, nombreCarpetaEnunciados)
+    rutaSerie = os.path.join(rutaBase, nombreCarpetaEnunciados)
+    rutaFinalEnunciado = os.path.join(rutaEnunciados, nombreCarpetaEnunciados)
 
+    # Verificar si las carpetas ya existen
+    if os.path.exists(rutaFinalEnunciado) or os.path.exists(rutaSerie):
+        raise CarpetaYaExisteError("La carpeta ya existe")
 
-    if not os.path.exists(rutaFinalEnunciado) or os.path.exists(rutaSerie):
-        os.makedirs(rutaFinalEnunciado)
+    try:
+        # Crear las carpetas necesarias
         os.makedirs(rutaSerie)
-    else:
-        return "La carpeta ya existe"
-    
-    return rutaSerie
+        os.makedirs(rutaFinalEnunciado)
+        return rutaSerie
+    except Exception as e:
+        raise CarpetaCreacionError(f"Error al crear la carpeta de la serie: {str(e)}")
