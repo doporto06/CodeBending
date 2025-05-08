@@ -182,6 +182,34 @@ def load_user(user_id):
 
     return user
 
+
+
+###############################################################################################
+####################################### REFACTORIZACION #######################################
+def verify_user(user_id, user_type):
+    """
+    Verifica que el usuario actual es del tipo especificado y tiene acceso al recurso.
+    
+    Args:
+        user_id: ID del usuario a verificar
+        user_type: Tipo de usuario (Supervisor o Estudiante)
+        
+    Returns:
+        bool: True si el usuario está autorizado, False en caso contrario
+    """
+    # Verificar tipo de usuario
+    if not isinstance(current_user, user_type):
+        tipo = "Supervisor" if user_type == Supervisor else "Estudiante"
+        flash(f'No tienes permiso para acceder a este dashboard. Debes ser un {tipo}.', 'danger')
+        return False
+    
+    # Verificar que accede a su propio dashboard
+    if current_user.id != user_id:
+        flash('No tienes permiso para acceder a este dashboard.', 'danger')
+        return False
+        
+    return True
+
 # Verifica que el usuario logueado es un Supervisor
 def verify_supervisor(supervisor_id):
     
