@@ -212,17 +212,7 @@ def verify_user(user_id, user_type):
 
 # Verifica que el usuario logueado es un Supervisor
 def verify_supervisor(supervisor_id):
-    
-    if not isinstance(current_user, Supervisor):
-        flash('No tienes permiso para acceder a este dashboard. Debes ser un Supervisor.', 'danger')
-        return False
-
-    # Asegura que el Supervisor está tratando de acceder a su propio dashboard
-    if current_user.id != supervisor_id:
-        flash('No tienes permiso para acceder a este dashboard.', 'danger')
-        return False
-
-    return True
+    return verify_user(supervisor_id, Supervisor)
 
 # Verifica que el usuario logueado es un Estudiante
 def verify_estudiante(estudiante_id):
@@ -236,14 +226,9 @@ def verify_estudiante(estudiante_id):
         return False
     return True
 
+# Verifica que el usuario logueado es un Ayudante
 def verify_ayudante(supervisor_id):
-
-    if not isinstance(current_user, Supervisor):
-        flash('No tienes permiso para acceder a este dashboard. Debes ser un Supervisor.', 'danger')
-        return False
-    if current_user.id != supervisor_id:
-        flash('No tienes permiso para acceder a este dashboard.', 'danger')
-        return False
+    return verify_user(supervisor_id, Supervisor)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
