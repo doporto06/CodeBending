@@ -5,3 +5,6 @@ instance/
 ejerciciosEstudiantes/
 ejerciciosPropuestos/
 enunciadosEjercicios/
+venv310/
+venv/
+**/__pycache__/
