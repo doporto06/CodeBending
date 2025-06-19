@@ -1,0 +1,27 @@
+[2025-05-08 09:24:21,443] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:24:34,180] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:24:51,545] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:25:37,079] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:29:00,840] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:30:12,536] [ERROR] [main] Ocurrió un error al registrar los estudiantes: 'CSVProcessor' object has no attribute 'process_file'
+[2025-05-08 09:30:43,201] [ERROR] [main] [CSVProcessor] Fila 1: La fila no tiene el formato esperado
+[2025-05-08 09:30:43,201] [ERROR] [main] [CSVProcessor] Fila 2: La fila no tiene el formato esperado
+[2025-05-08 09:30:43,201] [ERROR] [main] [CSVProcessor] Fila 3: La fila no tiene el formato esperado
+[2025-05-08 09:30:43,201] [ERROR] [main] [CSVProcessor] Fila 4: La fila no tiene el formato esperado
+[2025-05-08 09:30:43,201] [ERROR] [main] [CSVProcessor] Fila 5: La fila no tiene el formato esperado
+[2025-05-08 09:31:51,961] [ERROR] [main] [CSVProcessor] Fila 1: La fila no tiene el formato esperado
+[2025-05-08 09:31:51,961] [ERROR] [main] [CSVProcessor] Fila 2: La fila no tiene el formato esperado
+[2025-05-08 09:31:51,961] [ERROR] [main] [CSVProcessor] Fila 3: La fila no tiene el formato esperado
+[2025-05-08 09:31:51,961] [ERROR] [main] [CSVProcessor] Fila 4: La fila no tiene el formato esperado
+[2025-05-08 09:31:51,961] [ERROR] [main] [CSVProcessor] Fila 5: La fila no tiene el formato esperado
+[2025-05-08 09:35:59,047] [ERROR] [main] [CSVProcessor] Fila 1: La fila no tiene el formato esperado
+[2025-05-08 09:35:59,047] [ERROR] [main] [CSVProcessor] Fila 2: La fila no tiene el formato esperado
+[2025-05-08 09:35:59,047] [ERROR] [main] [CSVProcessor] Fila 3: La fila no tiene el formato esperado
+[2025-05-08 09:35:59,047] [ERROR] [main] [CSVProcessor] Fila 4: La fila no tiene el formato esperado
+[2025-05-08 09:35:59,047] [ERROR] [main] [CSVProcessor] Fila 5: La fila no tiene el formato esperado
+[2025-05-08 09:36:39,469] [ERROR] [main] [CSVProcessor] Fila 1: La fila no tiene el formato esperado
+[2025-05-08 09:36:39,469] [ERROR] [main] [CSVProcessor] Fila 2: La fila no tiene el formato esperado
+[2025-05-08 09:36:39,469] [ERROR] [main] [CSVProcessor] Fila 3: La fila no tiene el formato esperado
+[2025-05-08 09:36:39,470] [ERROR] [main] [CSVProcessor] Fila 4: La fila no tiene el formato esperado
+[2025-05-08 09:36:39,470] [ERROR] [main] [CSVProcessor] Fila 5: La fila no tiene el formato esperado
+[2025-05-08 09:38:46,059] [ERROR] [main] [CSVProcessor] Error inesperado: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
