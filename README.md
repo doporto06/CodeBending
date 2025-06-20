@@ -1,4 +1,22 @@
 # CodeBending
+Para la realización de las pruebas de aceptación, se utilizó el framework Behave para Python.
+## Instrucciones para instalar y ejecutar pruebas
+### Prerrequisitos
+Además de los prerrequisitos del proyecto Codebending, se utilizaron los siguientes para realizar las pruebas de aceptación:
+- Python 3.12
+- behave
+
+Para instalar `behave`, ejecutar el siguiente comando en la terminal:
+```bash
+pip install behave
+```
+
+Luego, para ejecutar las pruebas, basta con clonar el repositorio y ejecutar el siguiente comando dentro de la carpeta raiz:
+```bash
+behave
+```
+
+***
 
 You need Java JRE > 21 installed and Apache Maven in your computer.
 
