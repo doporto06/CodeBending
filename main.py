@@ -103,6 +103,7 @@ def calcular_calificacion(total_puntos, puntos_obtenidos):
 
 @login_manager.user_loader
 def load_user(user_id):
+    #print(f"Cargando usuario con ID: {user_id}")
     if user_id.startswith("e"):
         user = db.session.get(Estudiante, int(user_id[1:]))
     elif user_id.startswith("s"):
@@ -146,7 +147,6 @@ def verify_supervisor(supervisor_id):
 
 # Verifica que el usuario logueado es un Estudiante
 def verify_estudiante(estudiante_id):
-    
     if not isinstance(current_user, Estudiante):
         flash('No tienes permiso para acceder a este dashboard. Debes ser un Estudiante.', 'danger')
         return False

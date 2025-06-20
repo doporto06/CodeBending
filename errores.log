@@ -25,3 +25,51 @@
 [2025-05-08 09:36:39,470] [ERROR] [main] [CSVProcessor] Fila 4: La fila no tiene el formato esperado
 [2025-05-08 09:36:39,470] [ERROR] [main] [CSVProcessor] Fila 5: La fila no tiene el formato esperado
 [2025-05-08 09:38:46,059] [ERROR] [main] [CSVProcessor] Error inesperado: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+[2025-06-20 00:11:29,737] [ERROR] [main] Ocurrió un error al agregar el ejercicio: (sqlite3.IntegrityError) UNIQUE constraint failed: serie_asignada.id_serie, serie_asignada.id_grupo
+[SQL: INSERT INTO serie_asignada (id_serie, id_grupo) VALUES (?, ?)]
+[parameters: ('1', '1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:11:35,035] [ERROR] [main] Ocurrió un error al agregar el ejercicio: (sqlite3.IntegrityError) UNIQUE constraint failed: serie_asignada.id_serie, serie_asignada.id_grupo
+[SQL: INSERT INTO serie_asignada (id_serie, id_grupo) VALUES (?, ?)]
+[parameters: ('1', '1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:18:57,131] [ERROR] [main] Ocurrió un error al agregar el ejercicio: (sqlite3.IntegrityError) UNIQUE constraint failed: serie_asignada.id_serie, serie_asignada.id_grupo
+[SQL: INSERT INTO serie_asignada (id_serie, id_grupo) VALUES (?, ?)]
+[parameters: ('1', '1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:15,619] [ERROR] [main] Ocurrió un error al agregar el grupo: (sqlite3.IntegrityError) UNIQUE constraint failed: grupo.nombre
+[SQL: INSERT INTO grupo (nombre, id_curso) VALUES (?, ?)]
+[parameters: ('Sección 1', '1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:15,622] [ERROR] [main] Ocurrió un error al asignar estudiantes: (sqlite3.IntegrityError) NOT NULL constraint failed: estudiantes_grupos.id_grupo
+[SQL: INSERT INTO estudiantes_grupos (id_estudiante, id_grupo) VALUES (?, ?)]
+[parameters: ('2', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:15,624] [ERROR] [main] Ocurrió un error al asignar estudiantes: (sqlite3.IntegrityError) NOT NULL constraint failed: estudiantes_grupos.id_grupo
+[SQL: INSERT INTO estudiantes_grupos (id_estudiante, id_grupo) VALUES (?, ?)]
+[parameters: ('3', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:15,626] [ERROR] [main] Ocurrió un error al asignar el supervisor al grupo: (sqlite3.IntegrityError) NOT NULL constraint failed: supervisores_grupos.id_grupo
+[SQL: INSERT INTO supervisores_grupos (id_supervisor, id_grupo) VALUES (?, ?)]
+[parameters: (2, None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:19,038] [ERROR] [main] Ocurrió un error al agregar el grupo: (sqlite3.IntegrityError) UNIQUE constraint failed: grupo.nombre
+[SQL: INSERT INTO grupo (nombre, id_curso) VALUES (?, ?)]
+[parameters: ('Sección 1', '1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:19,039] [ERROR] [main] Ocurrió un error al asignar estudiantes: (sqlite3.IntegrityError) NOT NULL constraint failed: estudiantes_grupos.id_grupo
+[SQL: INSERT INTO estudiantes_grupos (id_estudiante, id_grupo) VALUES (?, ?)]
+[parameters: ('1', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:19,042] [ERROR] [main] Ocurrió un error al asignar estudiantes: (sqlite3.IntegrityError) NOT NULL constraint failed: estudiantes_grupos.id_grupo
+[SQL: INSERT INTO estudiantes_grupos (id_estudiante, id_grupo) VALUES (?, ?)]
+[parameters: ('2', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:19,044] [ERROR] [main] Ocurrió un error al asignar estudiantes: (sqlite3.IntegrityError) NOT NULL constraint failed: estudiantes_grupos.id_grupo
+[SQL: INSERT INTO estudiantes_grupos (id_estudiante, id_grupo) VALUES (?, ?)]
+[parameters: ('3', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-20 00:19:19,046] [ERROR] [main] Ocurrió un error al asignar el supervisor al grupo: (sqlite3.IntegrityError) NOT NULL constraint failed: supervisores_grupos.id_grupo
+[SQL: INSERT INTO supervisores_grupos (id_supervisor, id_grupo) VALUES (?, ?)]
+[parameters: (2, None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
