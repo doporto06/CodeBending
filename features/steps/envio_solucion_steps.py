@@ -1,18 +1,5 @@
 from behave import given, when, then
-
-@given('que existe un estudiante con correo "{correo}" y contraseña "{password}"')
-def step_impl_existe_estudiante(context, correo, password):
-    # La creación del estudiante ya se hizo en environment.py
-    # Guardamos las credenciales para el login
-    context.correo_estudiante = correo
-    context.password_estudiante = password
-
-@given('existe un ejercicio "{nombre_ejercicio}" en la "{nombre_serie}" de un curso activo')
-def step_impl_existe_ejercicio(context, nombre_ejercicio, nombre_serie):
-    # Esto también se maneja en environment.py
-    # Verificamos que los nombres coincidan con lo que se espera en el contexto.
-    assert context.ejercicio.nombre == nombre_ejercicio
-    assert context.serie.nombre == nombre_serie
+from features.steps.validacion_usuario_steps import *
 
 @given('el estudiante está autenticado en la plataforma')
 def step_impl_estudiante_autenticado(context):
