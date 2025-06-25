@@ -3,6 +3,7 @@ Para la realización de las pruebas de aceptación, se utilizó el framework Beh
 
 Las pruebas cubren las siguientes historias de usuario:
 - **Estudiante:** Envío de una solución a un ejercicio.
+- **Estudiante:** Re-envío de una solución a un ejercicio.
 - **Docente:** Creación de un nuevo ejercicio en una serie.
 - **Docente:** Registro de estudiantes en un curso
 
