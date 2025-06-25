@@ -39,6 +39,7 @@ def before_scenario(context, scenario):
     # Supervisor
     supervisor = Supervisor(nombres="Profesor", apellidos="Test", correo="profesor@test.com", password=generate_password_hash("password123"))
     db.session.add(supervisor)
+    context.supervisor = supervisor # Guardar el supervisor en el contexto para usarlo en los steps
 
     # Curso
     curso = Curso(nombre="Curso de Prueba", activa=True)
