@@ -1,5 +1,10 @@
 # CodeBending
 Para la realización de las pruebas de aceptación, se utilizó el framework Behave para Python.
+
+Las pruebas cubren las siguientes historias de usuario:
+- **Estudiante:** Envío de una solución a un ejercicio.
+- **Docente:** Creación de un nuevo ejercicio en una serie.
+
 ## Instrucciones para instalar y ejecutar pruebas
 ### Prerrequisitos
 Además de los prerrequisitos del proyecto Codebending, se utilizaron los siguientes para realizar las pruebas de aceptación:
