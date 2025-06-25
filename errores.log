@@ -73,3 +73,4 @@
 [SQL: INSERT INTO supervisores_grupos (id_supervisor, id_grupo) VALUES (?, ?)]
 [parameters: (2, None)]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
+[2025-06-25 00:22:32,918] [ERROR] [main] Ocurrió un error al agregar el ejercicio: 'NoneType' object is not subscriptable
