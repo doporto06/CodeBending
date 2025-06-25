@@ -44,6 +44,7 @@ def before_scenario(context, scenario):
     # Curso
     curso = Curso(nombre="Curso de Prueba", activa=True)
     db.session.add(curso)
+    context.curso = curso
     
     # Grupo
     grupo = Grupo(nombre="Sección 1", id_curso=1)
