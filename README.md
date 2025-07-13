@@ -1,43 +1,95 @@
 # CodeBending
-Para la realización de las pruebas de aceptación, se utilizó el framework Behave para Python.
 
-Las pruebas cubren las siguientes historias de usuario:
+CodeBending es una plataforma educativa para ejercicios de programación en Java. Los estudiantes envían soluciones a ejercicios y el sistema proporciona retroalimentación automatizada usando Maven.
+
+## Funcionalidades
+
+Las pruebas de aceptación cubren las siguientes historias de usuario:
 - **Estudiante:** Envío de una solución a un ejercicio.
 - **Estudiante:** Re-envío de una solución a un ejercicio.
 - **Docente:** Creación de un nuevo ejercicio en una serie.
 - **Docente:** Registro de estudiantes en un curso
 
-## Instrucciones para instalar y ejecutar pruebas
-### Prerrequisitos
-Además de los prerrequisitos del proyecto Codebending, se utilizaron los siguientes para realizar las pruebas de aceptación:
-- Python 3.12
-- behave
+## Opciones de Instalación
 
-Para instalar `behave`, ejecutar el siguiente comando en la terminal:
+### Opción 1: Usando Docker (Recomendado)
+
+#### Prerrequisitos
+- Docker instalado en tu sistema
+
+#### Instrucciones
+1. Clona el repositorio:
 ```bash
-pip install behave
+git clone <repository-url>
+cd CodeBending
 ```
 
-Luego, para ejecutar las pruebas, basta con clonar el repositorio y ejecutar el siguiente comando dentro de la carpeta raiz:
+2. Construye la imagen Docker:
 ```bash
+docker build -t codebending .
+```
+
+3. Ejecuta el contenedor:
+```bash
+docker run -p 3000:3000 codebending
+```
+
+4. Accede a la aplicación en http://localhost:3000
+
+5. Para crear la primera cuenta de supervisor, visita: http://localhost:3000/registerSupervisor
+
+#### Ejecutar con volúmenes persistentes
+Para mantener los datos entre reinicios del contenedor:
+```bash
+docker run -p 3000:3000 -v codebending_data:/app/instance codebending
+```
+
+### Opción 2: Instalación Local
+
+#### Prerrequisitos
+- Python 3.10+
+- Java JRE 17+
+- Apache Maven
+
+#### Instrucciones
+1. Crea un entorno virtual:
+```bash
+python -m venv venv
+source venv/bin/activate  # En Linux/Mac
+# o
+venv\Scripts\activate     # En Windows
+```
+
+2. Instala las dependencias:
+```bash
+pip install -r requirements.txt
+```
+
+3. Crea la base de datos:
+```bash
+python crear_db.py
+```
+
+4. Inicia el proyecto:
+```bash
+python main.py
+```
+
+5. Accede a http://127.0.0.1:3000/registerSupervisor para crear la primera cuenta de supervisor.
+
+## Ejecutar Pruebas
+
+### Pruebas de aceptación con Behave
+```bash
+# Instalar behave si no está instalado
+pip install behave
+
+# Ejecutar pruebas
 behave
 ```
 
-***
+## Recursos Adicionales
 
-You need Java JRE > 21 installed and Apache Maven in your computer.
+Ejemplo de ejercicio para la plataforma: https://github.com/GeoffreyHecht/FizzBuzzPasoAPaso
 
-In your favorite virtual env :
-`pip install -r requirements.txt`
-
-Then to create the database :
-`python .\crear_db.py`
-
-Then to start the project :
-`python .\main.py` 
-
-Then you need to connect to http://127.0.0.1:3000/registerSupervisor to create the first supervsor account.
-
-You can encounter an example of exercise for the platform here : https://github.com/GeoffreyHecht/FizzBuzzPasoAPaso
-
-Important: There seems to be a problem with path management under Windows, so I recommend using Linux (or correcting the problem).
+**Nota:** Existe un problema conocido con la gestión de rutas en Windows, se recomienda usar Linux o Docker.
